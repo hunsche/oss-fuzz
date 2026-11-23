@@ -15,9 +15,9 @@
 ################################################################################
 
 
-FROM gcr.io/oss-fuzz-base/base-builder-python
+FROM gcr.io/oss-fuzz-base/base-builder-python:ubuntu-24-04
 
-RUN apt install python3-dev libssl-dev libre2-dev -y
+RUN apt-get update && apt-get install -y python3-dev libssl-dev libre2-dev
 RUN git clone https://github.com/grpc/grpc grpc && \
     cd grpc && \
     git submodule update --init

@@ -17,3 +17,16 @@
 
 # Run build script from the mosquitto repo
 ./fuzzing/scripts/oss-fuzz-build.sh
+
+mkdir -p "$OUT/lib"
+for dir in /lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu; do
+  if [ -e "$dir/libargon2.so.1" ]; then
+    cp -L "$dir/libargon2.so.1" "$OUT/lib/"
+    break
+  fi
+done
+for fuzzer_bin in $OUT/*; do
+  if [ -f "$fuzzer_bin" ] && [ -x "$fuzzer_bin" ] && file "$fuzzer_bin" | grep -q ELF; then
+    patchelf --set-rpath '$ORIGIN/lib' "$fuzzer_bin" || true
+  fi
+done

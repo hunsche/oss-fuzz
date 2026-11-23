@@ -14,11 +14,11 @@
 #
 ################################################################################
 
-FROM gcr.io/oss-fuzz-base/base-builder
+FROM gcr.io/oss-fuzz-base/base-builder:ubuntu-24-04
 RUN apt-get update && apt-get install -y make autoconf automake libtool \
   pkg-config cmake nasm autopoint gettext python3 libqb-dev libbz2-dev \
   libglib2.0-dev corosync libgnutls28-dev libcfg-dev libcpg-dev libcmap-dev \
-  libquorum-dev libpython3-dev libdbus-1-dev
+  libquorum-dev libpython3-dev libdbus-1-dev libpcre3-dev
 
 RUN wget https://github.com/unicode-org/icu/releases/download/release-66-1/icu4c-66_1-src.tgz && tar xzvf icu4c-66_1-src.tgz
 RUN cd $SRC/icu/source && \
@@ -26,9 +26,6 @@ RUN cd $SRC/icu/source && \
   --disable-tests --disable-samples --with-data-packaging=static && \
   make install -j4
 
-# Build requires automake 1.16.3
-RUN curl -LO http://mirrors.kernel.org/ubuntu/pool/main/a/automake-1.16/automake_1.16.5-1.3_all.deb && \
-    apt install ./automake_1.16.5-1.3_all.deb
 
 RUN git clone --depth 1 https://gitlab.gnome.org/GNOME/libxml2.git
 RUN git clone --depth 1 https://gitlab.gnome.org/GNOME/libxslt.git

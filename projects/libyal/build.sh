@@ -84,3 +84,18 @@ do
     fi
   done
 done
+
+if [ "${ARCHITECTURE:-x86_64}" = "i386" ]; then
+  mkdir -p "${OUT}/lib"
+  for dir in /lib/i386-linux-gnu /usr/lib/i386-linux-gnu; do
+    if [ -e "$dir/libz.so.1" ]; then
+      cp -L "$dir/libz.so.1" "${OUT}/lib/"
+      break
+    fi
+  done
+  for fuzzer_bin in ${OUT}/*_fuzzer; do
+    if [ -f "$fuzzer_bin" ] && [ -x "$fuzzer_bin" ]; then
+      patchelf --set-rpath '$ORIGIN/lib' "$fuzzer_bin"
+    fi
+  done
+fi

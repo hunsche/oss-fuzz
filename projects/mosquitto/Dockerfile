@@ -14,7 +14,7 @@
 #
 ################################################################################
 
-FROM gcr.io/oss-fuzz-base/base-builder
+FROM gcr.io/oss-fuzz-base/base-builder:ubuntu-24-04
 
 # Main repo
 RUN git clone --depth 1 -b develop https://github.com/eclipse-mosquitto/mosquitto ${SRC}/mosquitto
@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y \
 	libz-dev \
 	make  \
 	ninja-build \
+	patchelf \
 	pkg-config
 RUN git clone --depth 1 https://github.com/google/libprotobuf-mutator.git
 RUN (mkdir LPM && cd LPM && cmake ../libprotobuf-mutator -GNinja -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON \

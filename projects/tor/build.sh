@@ -16,6 +16,7 @@
 ##############################################################################
 
 # Create a directory for instrumented dependencies.
+export AR=llvm-ar RANLIB=llvm-ranlib NM=llvm-nm
 TOR_DEPS=${SRC}/deps
 mkdir -p $TOR_DEPS
 

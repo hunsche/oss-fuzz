@@ -8,3 +8,4 @@ sanitizers:
 primary_contact: me@krisfremen.com
 vendor_ccs:
 - david@adalogics.com
+base_os_version: ubuntu-24-04

@@ -124,4 +124,17 @@ make -j$(nproc) fuzz_all
 find fuzz/ -regex 'fuzz/fuzz_[a-z_]*\(\.\(zip\|dict\|options\)\)?' -exec cp {} $OUT/ \;
 
 # Create the directory structure needed for fuzzing
-mkdir -p $OUT/install $OUT/data-dir $OUT/docs $OUT/scripts/callbacks
+mkdir -p $OUT/install $OUT/data-dir $OUT/docs $OUT/scripts/callbacks $OUT/lib
+for lib in libglib-2.0.so.0 libpcre2-8.so.0; do
+  for dir in /lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu; do
+    if [ -e "$dir/$lib" ]; then
+      cp -L "$dir/$lib" "$OUT/lib/"
+      break
+    fi
+  done
+done
+for fuzzer_bin in $OUT/fuzz_*; do
+  if [ -f "$fuzzer_bin" ] && [ -x "$fuzzer_bin" ]; then
+    patchelf --set-rpath '$ORIGIN/lib' "$fuzzer_bin"
+  fi
+done
