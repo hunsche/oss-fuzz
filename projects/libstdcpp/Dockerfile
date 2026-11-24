@@ -15,7 +15,7 @@
 ################################################################################
 
 FROM gcr.io/oss-fuzz-base/base-builder:ubuntu-24-04
-RUN sed -i 's/^Types: deb$/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources && apt-get update && apt-get install -y make autoconf automake libtool && apt-get build-dep -y g++
+RUN sed -i 's/^Types: deb$/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources && apt-get update && apt-get install -y make autoconf automake libtool flex libgmp-dev libmpfr-dev libmpc-dev && apt-get build-dep -y g++
 RUN git clone --depth 1 git://gcc.gnu.org/git/gcc.git libstdcpp
 WORKDIR libstdcpp
 COPY build.sh $SRC/

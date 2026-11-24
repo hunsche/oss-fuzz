@@ -15,6 +15,7 @@
 #
 ################################################################################
 cd $SRC/libsrtp
+automake --add-missing --copy 2>/dev/null || true
 autoreconf -ivf
 ./configure --with-crypto-library=internal
 LIBFUZZER="$LIB_FUZZING_ENGINE" make srtp-fuzzer

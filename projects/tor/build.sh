@@ -17,6 +17,11 @@
 
 # Create a directory for instrumented dependencies.
 export AR=llvm-ar RANLIB=llvm-ranlib NM=llvm-nm
+if [[ "${FUZZING_ENGINE:-}" == "afl" ]]; then
+  export CFLAGS="$CFLAGS -fuse-ld=lld"
+  export CXXFLAGS="$CXXFLAGS -fuse-ld=lld"
+  export LDFLAGS="${LDFLAGS:-} -fuse-ld=lld"
+fi
 TOR_DEPS=${SRC}/deps
 mkdir -p $TOR_DEPS
 

@@ -18,5 +18,5 @@ FROM gcr.io/oss-fuzz-base/base-builder:ubuntu-24-04
 RUN apt-get update && apt-get install -y cmake zlib1g-dev libpng-dev libjpeg-dev libfreetype-dev libproj-dev libxml2-dev
 RUN git clone --depth 1 https://github.com/OSGeo/gdal
 RUN git clone --depth 1 https://github.com/MapServer/MapServer
-RUN cp MapServer/fuzzers/build.sh $SRC/ && sed -i 's/\blibproj15\b/libproj-dev/g' $SRC/build.sh
+RUN sed -i 's/libproj15/libproj25/g; s/apt-get remove -y .*/apt-get remove -y libproj-dev libxml2-dev || true/' MapServer/fuzzers/build.sh && cp MapServer/fuzzers/build.sh $SRC/
 WORKDIR $SRC/
