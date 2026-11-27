@@ -29,8 +29,21 @@ if [ "$ARCHITECTURE" = 'i386' ]; then
   rm -f /usr/lib/x86_64-linux-gnu/libcrypto.so /usr/lib/x86_64-linux-gnu/libcrypto.a
 fi
 
+OPENSSL_CMAKE_ARGS=()
+if [ "$SANITIZER" = "memory" ] && [ "$ARCHITECTURE" = "x86_64" ]; then
+  OPENSSL_PREFIX="$SRC/openssl-msan"
+  (
+    cd "$SRC/openssl"
+    CC="$CC" CFLAGS="$CFLAGS -fPIC" ./Configure linux-x86_64 \
+      --prefix="$OPENSSL_PREFIX" --libdir=lib no-asm no-shared no-tests
+    make -j"$(nproc)" build_libs
+    make install_dev
+  )
+  OPENSSL_CMAKE_ARGS=(-DOPENSSL_ROOT_DIR="$OPENSSL_PREFIX" -DOPENSSL_USE_STATIC_LIBS=ON)
+fi
+
 # Build project
-cmake . -DCMAKE_C_FLAGS="$CFLAGS" -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DMZ_BUILD_FUZZ_TESTS=ON -DMZ_BUILD_TESTS=ON -DMZ_BUILD_UNIT_TESTS=ON -DMZ_FETCH_LIBS=OFF -DXZ_SANDBOX=no
+cmake . -DCMAKE_C_FLAGS="$CFLAGS" -DCMAKE_CXX_FLAGS="$CXXFLAGS" "${OPENSSL_CMAKE_ARGS[@]}" -DMZ_BUILD_FUZZ_TESTS=ON -DMZ_BUILD_TESTS=ON -DMZ_BUILD_UNIT_TESTS=ON -DMZ_FETCH_LIBS=OFF -DXZ_SANDBOX=no
 make clean
 make -j$(nproc)
 
