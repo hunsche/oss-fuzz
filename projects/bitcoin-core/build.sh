@@ -31,6 +31,10 @@ fi
 
 export CFLAGS="$CFLAGS -flto=full"
 export CXXFLAGS="$CXXFLAGS -flto=full"
+# Work around glibc 2.39 __libc_start_main stack-reuse false positive under MSan.
+if [ "$SANITIZER" = "memory" ]; then
+  export CXXFLAGS="$CXXFLAGS -fno-sanitize-memory-use-after-dtor"
+fi
 # Use lld to workaround <module> referenced in <section> of /tmp/lto-llvm-*.o: defined in discarded section
 export LDFLAGS="-fuse-ld=lld -flto=full"
 

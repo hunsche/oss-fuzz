@@ -15,4 +15,13 @@
 #
 ################################################################################
 
-$SRC/fuzzing/projects/libcups/oss_fuzz_build.sh
+if [ "$SANITIZER" = "memory" ]; then
+  export CFLAGS="$CFLAGS -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0"
+  export CXXFLAGS="$CXXFLAGS -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0"
+  export CPPFLAGS="${CPPFLAGS:-} -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0"
+  sed -i 's/-D_FORTIFY_SOURCE=3/-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0/g' \
+    "$SRC/fuzzing/projects/libcups/fuzzer/Makefile"
+  sed -i 's|\./configure --enable-static --disable-shared|./configure --enable-static --disable-shared --disable-dbus|' \
+    "$SRC/fuzzing/projects/libcups/oss_fuzz_build.sh"
+fi
+"$SRC/fuzzing/projects/libcups/oss_fuzz_build.sh"

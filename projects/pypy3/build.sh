@@ -50,7 +50,8 @@ while read -r name; do
     fi
 done < fuzz_targets.txt
 
-cp $SRC/pypy/pypy/goal/libpypy3.11-c.so $OUT/libpypy3-c.so
+cp $SRC/pypy/pypy/goal/libpypy3.11-c.so $OUT/libpypy3.11-c.so
+ln -sf libpypy3.11-c.so $OUT/libpypy3-c.so
 cp ubsan_suppressions.txt $OUT/
 cp -R $SRC/pypy/lib-python $OUT/
 cp -R $SRC/pypy/lib_pypy $OUT/

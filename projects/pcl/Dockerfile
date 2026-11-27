@@ -14,11 +14,10 @@
 #
 ################################################################################
 
-FROM gcr.io/oss-fuzz-base/base-builder@sha256:19782f7fe8092843368894dbc471ce9b30dd6a2813946071a36e8b05f5b1e27e
-# ! This project was pinned after a clang bump. Please remove the pin, Try to fix any build warnings and errors, as well as runtime errors
+FROM gcr.io/oss-fuzz-base/base-builder:ubuntu-24-04
 RUN apt-get update && apt-get install -y make cmake autoconf \
     automake libtool gettext pkg-config build-essential \
-    mercurial wget libeigen3-dev libflann-dev python python-dev 
+    mercurial wget libeigen3-dev libflann-dev python-is-python3 python3-dev 
     
 # VTK deps
 RUN apt-get update && apt-get install -y \
@@ -26,7 +25,7 @@ RUN apt-get update && apt-get install -y \
     libdouble-conversion-dev libeigen3-dev libexpat1-dev \
     libfontconfig-dev libfreetype6-dev libgdal-dev libglew-dev \
     libhdf5-dev libjpeg-dev libjsoncpp-dev liblz4-dev liblzma-dev \
-    libnetcdf-dev libnetcdf-cxx-legacy-dev libogg-dev libpng-dev \
+    libnetcdf-dev libogg-dev libpng-dev \
     libpython3-dev libqt5opengl5-dev libqt5x11extras5-dev libsqlite3-dev \
     libswscale-dev libtheora-dev libtiff-dev libxml2-dev libxt-dev \
     qtbase5-dev qttools5-dev zlib1g-dev

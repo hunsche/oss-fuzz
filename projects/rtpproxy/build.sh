@@ -15,9 +15,15 @@
 #
 ################################################################################
 
-# TODO(David): move this patch upstream
+TMP_BUILD_SCRIPT="$(mktemp /tmp/rtpproxy_build.XXXXXX.sh)"
+trap 'rm -f "$TMP_BUILD_SCRIPT"' EXIT
+cp ./scripts/fuzz/oss-fuzz-build.sh "$TMP_BUILD_SCRIPT"
+
 if [ -f /usr/local/bin/clang-22 ]; then
-  echo "Adjusting clang version"
-  sed -i 's/CLANG_VER=18/CLANG_VER=22/g' ./scripts/fuzz/oss-fuzz-build.sh
+  sed -i 's/CLANG_VER=18/CLANG_VER=22/g' "$TMP_BUILD_SCRIPT"
 fi
-bash -x ./scripts/fuzz/oss-fuzz-build.sh
+sed -i '/\/etc\/apt\/sources\.list/c\  sed -i "s/^Types: deb$/Types: deb deb-src/" /etc/apt/sources.list.d/ubuntu.sources' "$TMP_BUILD_SCRIPT"
+sed -i 's/apt-get reinstall -y libssl1\.1/apt-get reinstall -y libssl3t64/' "$TMP_BUILD_SCRIPT"
+sed -i '/if \[ -e "\${PPATH}" \]/i\  if [ "${PKGNAME}" = "libssl-dev" ]; then sed -i "s/^#if !defined(_WIN32)$/#if !defined(_WIN32) \&\& !defined(time)/" fuzz/client.c fuzz/server.c 2>/dev/null || true; PPATH="/nonexistent"; fi' "$TMP_BUILD_SCRIPT"
+
+bash -x "$TMP_BUILD_SCRIPT"
