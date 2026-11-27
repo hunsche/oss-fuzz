@@ -15,4 +15,8 @@
 #
 ################################################################################
 
+if [ "$SANITIZER" = "memory" ]; then
+  export ac_cv_func_strlcpy=no
+  export ac_cv_func_strlcat=no
+fi
 $SRC/fuzzing/projects/libcups/oss_fuzz_build.sh

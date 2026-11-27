@@ -58,6 +58,7 @@ EXTRA_BUILD_OPTIONS=
 if [ "$SANITIZER" = "memory" ]; then
   # _FORTIFY_SOURCE is not compatible with MSAN.
   EXTRA_BUILD_OPTIONS="-DAPPEND_CPPFLAGS='-U_FORTIFY_SOURCE'"
+  export CXXFLAGS="$CXXFLAGS -fno-sanitize-memory-use-after-dtor"
 fi
 
 cmake -B build_fuzz \

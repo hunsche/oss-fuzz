@@ -15,6 +15,10 @@
 #
 ################################################################################
 
+if [ "$SANITIZER" = "memory" ]; then
+  export CXXFLAGS="$CXXFLAGS -fno-sanitize-memory-use-after-dtor"
+fi
+
 # Build fuzzer only
 cd $SRC/flatbuffers
 mkdir build

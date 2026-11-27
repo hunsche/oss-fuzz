@@ -13,11 +13,12 @@
 # limitations under the License.
 #
 ################################################################################
-FROM gcr.io/oss-fuzz-base/base-builder
+FROM gcr.io/oss-fuzz-base/base-builder:ubuntu-24-04
 RUN apt-get update && apt-get install -y zlib1g-dev libavahi-client-dev libsystemd-dev
 RUN git clone --depth 1 https://github.com/OpenPrinting/cups
 RUN git clone --depth 1 https://github.com/OpenPrinting/fuzzing.git
-RUN cp $SRC/fuzzing/projects/cups/oss_fuzz_build.sh $SRC/build.sh
+RUN cp $SRC/fuzzing/projects/cups/oss_fuzz_build.sh $SRC/build.sh && \
+    sed -i '2i if [ "${SANITIZER:-}" = "memory" ]; then export ac_cv_func_strlcpy=no ac_cv_func_strlcat=no; fi' $SRC/build.sh
 COPY run_tests.sh *.diff $SRC/
 RUN cd $SRC/fuzzing && git apply $SRC/test_patch.diff
 WORKDIR $SRC/cups

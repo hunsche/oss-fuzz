@@ -35,7 +35,7 @@ sed -i '/-fsanitize-ignore-for-ubsan-feature=${invoker.sanitizer}/d' build/confi
 
 # Configure arguments for gn build
 ARGS="treat_warnings_as_errors=false is_component_build=false libcxx_is_shared=false is_debug=false"
-ARGS+=" use_custom_libcxx=true use_sysroot=true ozone_platform_x11=false"
+ARGS+=" use_custom_libcxx=true use_sysroot=false ozone_platform_x11=false"
 ARGS+=" is_clang=true clang_use_chrome_plugins=false clang_base_path=\"/usr/local\" clang_version=\"$CLANG_VERSION\""
 # Enable MSL and WGSL translators specifically, without enabling the full Metal renderer
 ARGS+=" angle_enable_msl=true angle_enable_wgpu=true"

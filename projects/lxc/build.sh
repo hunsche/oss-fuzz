@@ -16,4 +16,7 @@
 ################################################################################
 
 export CFLAGS="${CFLAGS} -Wno-error=backend-plugin"
+if [ "$SANITIZER" = "memory" ]; then
+  sed -i "/'strlcpy'/d;/'strlcat'/d" meson.build
+fi
 src/tests/oss-fuzz.sh

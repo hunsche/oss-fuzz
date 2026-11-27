@@ -14,9 +14,13 @@
 #
 ################################################################################
 
-FROM gcr.io/oss-fuzz-base/base-builder
-RUN apt-get update && apt-get install -y cmake zlib1g-dev libpng-dev libjpeg-dev libfreetype-dev libproj-dev libxml2-dev
+FROM gcr.io/oss-fuzz-base/base-builder:ubuntu-24-04
+RUN apt-get update && apt-get install -y cmake zlib1g-dev libpng-dev libjpeg-dev libfreetype-dev libbz2-dev libbrotli-dev libproj-dev libxml2-dev
 RUN git clone --depth 1 https://github.com/OSGeo/gdal
 RUN git clone --depth 1 https://github.com/MapServer/MapServer
-RUN cp MapServer/fuzzers/build.sh $SRC/
+RUN sed -i 's/libproj15/libproj25/g' MapServer/fuzzers/build.sh && \
+    sed -i 's/-DBUILD_APPS=OFF/-DBUILD_APPS=OFF -DGDAL_USE_TIFF_INTERNAL=ON -DGDAL_USE_GEOTIFF_INTERNAL=ON/' MapServer/fuzzers/build.sh && \
+    sed -i 's/-lfreetype/-lfreetype -lbz2 -lpng -lbrotlidec -lbrotlicommon/' MapServer/fuzzers/build.sh && \
+    sed -i 's/-Wl,-Bdynamic/-Wl,-Bdynamic -lm/' MapServer/fuzzers/build.sh && \
+    cp MapServer/fuzzers/build.sh $SRC/
 WORKDIR $SRC/

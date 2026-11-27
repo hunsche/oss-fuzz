@@ -20,4 +20,7 @@ if [ -f /usr/local/bin/clang-22 ]; then
   echo "Adjusting clang version"
   sed -i 's/CLANG_VER=18/CLANG_VER=22/g' ./scripts/fuzz/oss-fuzz-build.sh
 fi
+sed -i "s|perl -pi -e 's|\^# deb-src|deb-src|' /etc/apt/sources.list|true|" ./scripts/fuzz/oss-fuzz-build.sh
+sed -i 's|apt-get reinstall -y libssl1.1|apt-get reinstall -y libssl3t64|' ./scripts/fuzz/oss-fuzz-build.sh
+rm -f ./scripts/fuzz/libssl-dev.patch
 bash -x ./scripts/fuzz/oss-fuzz-build.sh
