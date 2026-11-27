@@ -14,10 +14,10 @@
 #
 ################################################################################
 
-FROM gcr.io/oss-fuzz-base/base-builder
+FROM gcr.io/oss-fuzz-base/base-builder:ubuntu-24-04
 RUN apt-get update -y && \
     apt-get install -y autoconf automake libtool curl make g++ unzip wget git \
-    binutils liblzma-dev libz-dev python-all ninja-build subversion \
+    binutils liblzma-dev libz-dev python3-all python-is-python3 ninja-build subversion \
     pkg-config
 
 # LLVM's top-level CMakeLists.txt requires CMake >= 3.31.0, which is newer than

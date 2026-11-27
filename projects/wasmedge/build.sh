@@ -29,8 +29,8 @@ cmake -GNinja -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo \
   -DCMAKE_C_COMPILER_RANLIB="$(command -v llvm-ranlib)" \
   -DCMAKE_CXX_COMPILER_AR="$(command -v llvm-ar)" \
   -DCMAKE_CXX_COMPILER_RANLIB="$(command -v llvm-ranlib)" \
-  -DLLVM_DIR="/usr/lib/llvm-12/lib/cmake/llvm" \
-  -DLLD_DIR="/usr/lib/llvm-12/lib/cmake/lld" \
+  -DLLVM_DIR="/usr/lib/llvm-18/lib/cmake/llvm" \
+  -DLLD_DIR="/usr/lib/llvm-18/lib/cmake/lld" \
   .
 ninja -C build
 cp -a build/lib/api/libwasmedge*.so* build/tools/fuzz/wasmedge-fuzz* "$OUT"/
@@ -55,7 +55,7 @@ for i in build/tools/fuzz/wasmedge-fuzz*; do
   patchelf --set-rpath \$ORIGIN "$OUT/${j}"
 done
 
-for i in libLLVM-12.so.1 libedit.so.2 libbsd.so.0; do
-  cp "/usr/lib/x86_64-linux-gnu/${i}" "$OUT/"
+for i in libLLVM.so.18.1 libedit.so.2 libbsd.so.0; do
+  cp -L "/usr/lib/x86_64-linux-gnu/${i}" "$OUT/${i}"
   patchelf --set-rpath \$ORIGIN "$OUT/${i}"
 done

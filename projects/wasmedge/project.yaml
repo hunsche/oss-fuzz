@@ -18,3 +18,4 @@ sanitizers:
 # so the build then fails to link. Re-enable memory once either WasmEdge
 # guards that call site or an MSan-instrumented LLVM is available.
 main_repo: 'https://github.com/WasmEdge/WasmEdge.git'
+base_os_version: ubuntu-24-04

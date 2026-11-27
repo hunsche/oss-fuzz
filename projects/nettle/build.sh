@@ -21,13 +21,13 @@ bash .bootstrap
 
 if [[ $CFLAGS != *sanitize=memory* ]]
 then
-    ./configure --enable-mini-gmp --disable-documentation --disable-openssl --prefix=$SRC/nettle-install
+    ./configure --enable-mini-gmp --disable-shared --disable-documentation --disable-openssl --prefix=$SRC/nettle-install
 else
-    ./configure --enable-mini-gmp --disable-documentation --disable-openssl --disable-assembler --prefix=$SRC/nettle-install
+    ./configure --enable-mini-gmp --disable-shared --disable-documentation --disable-openssl --disable-assembler --prefix=$SRC/nettle-install
 fi
 
-make -j$(nproc)
-make install
+make -j$(nproc) libnettle.a libhogweed.a
+make install-headers install-static
 
 # Build all fuzzers
 FUZZERS="

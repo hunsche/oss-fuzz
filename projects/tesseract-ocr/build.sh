@@ -14,4 +14,6 @@
 # limitations under the License.
 #
 ################################################################################
+sed -i 's/LEPTONICA_LIBS=$(pkg-config --static --libs lept)/LEPTONICA_LIBS=$(pkg-config --static --libs lept | sed "s\/ -lm\/\/g")/' "$SRC/tesseract/unittest/fuzzers/oss-fuzz-build.sh"
+sed -i 's/-Wl,-Bdynamic/-Wl,-Bdynamic -lm/g' "$SRC/tesseract/unittest/fuzzers/oss-fuzz-build.sh"
 $SRC/tesseract/unittest/fuzzers/oss-fuzz-build.sh
